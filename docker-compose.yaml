@@ -1,0 +1,14 @@
+services:
+  clientServer:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DB_URI: /run/secrets/db_uri
+      PORT: 3000
+    secrets:
+      - db_uri
+secrets:
+  db_uri:
+    file: db_uri.txt
+    
