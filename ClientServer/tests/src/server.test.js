@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import path from 'path';
-//import { dirname, path } from 'path';
 import { fileURLToPath } from 'url';
 
 import { startServer, closeServer } from "../../src/server";
@@ -16,7 +15,7 @@ describe("server functions", () => {
         const DB_URI = process.env.DB_URI;
         const server = await startServer(PORT, DB_URI);
         console.log("port: ", PORT);
-        console.log("uri: ", DB_URI.split(":")[0],"...");
+        console.log("uri: ", DB_URI.split(":")[0],"..."); //if working should be 'mongodb+srv'
         expect(server.status).toBe('running');
         const endStatus = await closeServer(server);
         expect(endStatus).toBe('closed');
