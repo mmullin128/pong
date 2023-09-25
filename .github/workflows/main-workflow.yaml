@@ -12,5 +12,8 @@ jobs:
         working-directory: ./ClientServer
         run: npm install --dev
       - name: Run Tests
+        env: 
+          PORT: 3000
+          DB_URI: ${{ secrets.DB_URI }}
         working-directory: ./ClientServer
         run: npm test

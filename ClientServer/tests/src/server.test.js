@@ -9,11 +9,14 @@ describe("server functions", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
         dotenv.config({ path: path.join(__dirname, '../../.env')});
+        
     });
     test("sever startup and shutdown", async () => {
         const PORT = process.env.PORT;
-        const URI = process.env.URI;
-        const server = await startServer(PORT, URI);
+        const DB_URI = process.env.DB_URI;
+        const server = await startServer(PORT, DB_URI);
+        console.log("port: ", PORT);
+        console.log("uri: ", DB_URI.split(":")[0],"...");
         expect(server.status).toBe('running');
         const endStatus = await closeServer(server);
         expect(endStatus).toBe('closed');
