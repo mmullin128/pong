@@ -16,7 +16,7 @@ describe("server functions", () => {
         const DB_URI = process.env.DB_URI;
         const server = await startServer(PORT, DB_URI);
         console.log("port: ", PORT);
-        console.log("uri: ", DB_URI.split(":")[0],"...");
+        console.log("uri: ", DB_URI.split(":")[0],"....");
         expect(server.status).toBe('running');
         const endStatus = await closeServer(server);
         expect(endStatus).toBe('closed');
