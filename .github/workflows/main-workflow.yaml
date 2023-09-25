@@ -9,8 +9,8 @@ jobs:
         with:
           node-version: '18'
       - name: Install Dependencies
-      - working-directory: ./ClientServer
-      - run: npm install --dev
+        working-directory: ./ClientServer
+        run: npm install --dev
       - name: Run Tests
-      - working-directory: ./ClientServer
-      - run: npm test
+        working-directory: ./ClientServer
+        run: npm test
