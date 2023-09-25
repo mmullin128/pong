@@ -8,6 +8,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: cd ClientServer
+      - name: Install Dependencies
+      - working-directory: ./ClientServer
       - run: npm install --dev
+      - name: Run Tests
+      - working-directory: ./ClientServer
       - run: npm test
