@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { mongoClient, connect, disconnect, mongoClient } from '../../../src/db/mongoClient.js';
+import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js';
 
 describe("Mongo Client Setup", () => {
     beforeAll(() => {
