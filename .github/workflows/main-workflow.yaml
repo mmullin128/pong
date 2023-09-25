@@ -9,5 +9,5 @@ jobs:
         with:
           node-version: '18'
       - run: cd ClientServer
-      - run: npm ci
+      - run: npm install --dev
       - run: npm test
