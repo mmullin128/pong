@@ -1,12 +1,21 @@
 import { MongoClient } from 'mongodb';
+import jsonFromFile from '../../utils/jsonFromFile.js';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 export function mongoClient(DB_URI) {
     return new MongoClient(DB_URI);
 }
 
-export const connect = (mongoClient) => new Promise((resolve,reject) => {
-    mongoClient.connect()
+export async function appStructure() {
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const structure = await jsonFromFile(path.join(__dirname, './structure.json'));
+    return structure();
+}
+
+export const connect = (dbClient) => new Promise((resolve,reject) => {
+    dbClient.connect()
     .catch((err) => reject(err))
     .then(() => {
         console.log('db connected');
@@ -14,8 +23,8 @@ export const connect = (mongoClient) => new Promise((resolve,reject) => {
     });
 });
 
-export const disconnect = (mongoClient) => new Promise((resolve,reject) => {
-    mongoClient.close()
+export const disconnect = (dbClient) => new Promise((resolve,reject) => {
+    dbClient.close()
     .catch((err) => reject(err))
     .then(() => {
         console.log('db disconnected');

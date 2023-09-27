@@ -7,6 +7,8 @@ import { startServer, closeServer } from "../../src/server";
 describe("server functions", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
+        //dotenv only configures env variables from .env on a locally run environment containing a .env file
+        //instances run from devolopment and deployment servers must pass in env variables
         dotenv.config({ path: path.join(__dirname, '../../.env')});
         
     });

@@ -7,7 +7,7 @@ import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js
 describe("Mongo Client Setup", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        dotenv.config({ path: path.join(__dirname, '../../.env')});
+        dotenv.config({ path: path.join(__dirname, '../../../.env')});
         
     });
     test("startup, connect, disconnect", async () => {

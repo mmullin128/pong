@@ -1,0 +1,46 @@
+{
+    "Meta": {
+        "playersCollections": [
+            {
+                "name": "Players1",
+                "collectionCode": "1",
+                "current": 0,
+                "max": 1000
+            }
+        ],
+        "gamesCollections": [
+            {
+                "name": "Games1",
+                "collectionCode": "A",
+                "current": 0,
+                "max": 1000
+            },
+            {
+                "name": "Games2",
+                "collectionCode": "B",
+                "current": 0,
+                "max": 1000
+            },
+            {
+                "name": "Games3",
+                "collectionCode": "C",
+                "current": 0,
+                "max": 1000
+            }
+        ],
+        "gameServers": [
+            {
+                "name": "S1",
+                "url": "ws://localhost:8000",
+                "current": 0,
+                "max": 1000
+            },
+            {
+                "name": "S2",
+                "url": "ws://localhost:8001",
+                "current": 0,
+                "max": 1000
+            }
+        ]
+    }
+}
