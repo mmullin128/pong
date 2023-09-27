@@ -5,6 +5,18 @@
                 "name": "Players1",
                 "collectionCode": "1",
                 "current": 0,
+                "max": 5
+            },
+            {
+                "name": "Players2",
+                "collectionCode": "2",
+                "current": 0,
+                "max": 5
+            },
+            {
+                "name": "Players3",
+                "collectionCode": "3",
+                "current": 0,
                 "max": 1000
             }
         ],

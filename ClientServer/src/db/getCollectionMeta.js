@@ -1,5 +1,6 @@
+import { NoSuchCollectionError } from "../errors/errors.js";
 
-export async function getCollectionMeta(mongoClient,type,num) {
+export async function getCollectionMeta(mongoClient,type,num,collectionCode) {
     const metaCollection = mongoClient.db("DB1").collection("Meta");
     //query for document in gameServers array with collection name PlayersN or GamesN
     /*
@@ -14,21 +15,35 @@ export async function getCollectionMeta(mongoClient,type,num) {
     let projection = {};
     let metaArrayName;
     if (type == "Players")  {
-        query = { "playersCollections.name": collectionName };
         metaArrayName = "playersCollections";
-        projection = { "playersCollections": { $elemMatch: { "name": collectionName }}, _id: 0};
-    } else if (type == "Games") {
-        query = { "gamesCollections.name": collectionName };
-        //projection = { "gamesCollections": { $elemMatch: { "name": collectionName }}, _id: 0};
+        if (collectionCode) {
+            query = { "playersCollections.collectionCode": collectionCode };
+            projection = { "playersCollections": { $elemMatch: { "collectionCode": collectionCode }}, _id: 0};
+        } else {
+            query["playersCollections.name"] = collectionName;
+            projection = { "playersCollections": { $elemMatch: { "name": collectionName }}, _id: 0};
+        }
+     } else if (type == "Games") {
         metaArrayName = "gamesCollections";
-        projection = { "gamesCollections.$": 1, _id: 0};
-        //projection = { _id: -1 };
+        if (collectionCode) {
+            query = { "gamesCollections.collectionCode": collectionCode };
+            projection = { "gamesCollections": { $elemMatch: { "collectionCode": collectionCode }}, _id: 0};
+        } else {
+            query["gamesCollections.name"] = collectionName;
+            projection = { "gamesCollections": { $elemMatch: { "name": collectionName }}, _id: 0};
+        }
     } else if (type == "S") {
-        query = { "gameServers.name": collectionName };
         metaArrayName = "gameServers";
-        projection = { "gameServers": { $elemMatch: { "name": collectionName }}, _id: 0};
+        if (collectionCode) {
+            query = { "gameServers.collectionCode": collectionCode };
+            projection = { "gameServers": { $elemMatch: { "collectionCode": collectionCode }}, _id: 0};
+        } else {
+            query["gameServers.name"] = collectionName;
+            projection = { "gameServers": { $elemMatch: { "name": collectionName }}, _id: 0};
+        }
     }
     const document = await metaCollection.findOne(query, { projection: projection });
+    if (!document) throw new NoSuchCollectionError(collectionName);
     const data = document[metaArrayName][0];
     return data;
 }
