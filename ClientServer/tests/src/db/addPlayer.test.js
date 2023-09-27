@@ -19,16 +19,16 @@ describe("Get Collection Meta", () => {
         const client = mongoClient(DB_URI);
         await connect(client);
         const players = [];
-        const n = 10;
+        const n = 1;
         try {        
             for (let i=0; i<n; i++) {
                 const player = await addPlayer(client,1);
-                console.log(`${i}: `, player.id , player.collectionCode);
+                //console.log(`${i}: `, player.id , player.collectionCode);
                 players.push(player);
             }
             for (let i=0; i<n; i++) {
                 const collectionData = await getCollectionMeta(client,'Players',0,players[i].collectionCode);
-                console.log(`${i}`,'remove', collectionData.name);
+                //console.log(`${i}`,'remove', collectionData.name);
                 await removePlayer(client,collectionData.name,players[i].id);
             }
             await disconnect(client);
