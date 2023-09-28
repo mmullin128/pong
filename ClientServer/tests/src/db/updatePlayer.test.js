@@ -4,9 +4,11 @@ import { fileURLToPath } from 'url';
 
 import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js';
 
+import { getCollectionMeta } from '../../../src/db/getCollectionMeta.js';
 import { updatePlayer } from '../../../src/db/updatePlayer.js';
 import { addPlayer } from '../../../src/db/addPlayer.js';
 import { removePlayer } from '../../../src/db/removePlayer.js';
+
 
 describe("Update Players", () => {
     beforeAll(() => {
