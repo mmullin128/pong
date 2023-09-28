@@ -32,7 +32,7 @@ describe("Update Players", () => {
             }
             for (let i=0; i<n; i++) {
                 const collectionData = await getCollectionMeta(client,'Players',0,players[i].collectionCode);
-                //console.log(`${i}`,'remove', collectionData.name);
+                console.log(`${i}`,'update', collectionData.name);
                 await updatePlayer(client,collectionData.collectionCode,players[i].id,playerData);
                 //await removePlayer(client,collectionData.name,players[i].id);
             }
