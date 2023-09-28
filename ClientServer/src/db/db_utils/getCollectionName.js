@@ -7,7 +7,9 @@ import { mongoClient } from '../mongoClient.js';
 export async function getCollectionName(mongoClient,type,collectionCode) {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const structure = await jsonFromFile(path.join(__dirname, './structure.json'));
+
+    const metaCollection = mongoClient.db("DB1").collection("Meta");
+    const collectionMeta = await getCollectionMeta(mongoClient,type,);
     if (type == "Players") {
-        const collectionMeta = await getCollectionMeta(mongoClient,type,)
     }
 }
