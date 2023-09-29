@@ -4,12 +4,9 @@ import { fileURLToPath } from 'url';
 
 import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js';
 
-import { getCollectionMeta } from '../../../src/db/getCollectionMeta.js';
-import { updatePlayer } from '../../../src/db/updatePlayer.js';
-import { addPlayer } from '../../../src/db/addPlayer.js';
-import { removePlayer } from '../../../src/db/removePlayer.js';
-
-
+import { insert } from '../../../src/db/insert.js';
+import { update } from '../../../src/db/update.js';
+import { remove } from '../../../src/db/remove.js';
 describe("Update Players", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -20,20 +17,18 @@ describe("Update Players", () => {
         const client = mongoClient(DB_URI);
         await connect(client);
         const players = [];
-        const n = 1;
+        const n = 10;
         const playerData = {
             length: 1
         }
         try {        
             for (let i=0; i<n; i++) {
-                const player = await addPlayer(client,1);
+                const player = await insert(client,"Player");
                 //console.log(`${i}: `, player.id , player.collectionCode);
                 players.push(player);
             }
             for (let i=0; i<n; i++) {
-                const collectionData = await getCollectionMeta(client,'Players',0,players[i].collectionCode);
-                console.log(`${i}`,'update', collectionData.name);
-                await updatePlayer(client,collectionData.collectionCode,players[i].id,playerData);
+                await update(client,"P",players[i].id,"playerData",playerData,players[i].collectionCode);
                 //await removePlayer(client,collectionData.name,players[i].id);
             }
             await disconnect(client);

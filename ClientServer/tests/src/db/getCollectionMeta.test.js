@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 import jsonFromFile from '../../../utils/jsonFromFile.js';
 import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js';
-import { getCollectionMeta } from '../../../src/db/getCollectionMeta.js';
+import { getMeta } from '../../../src/db/metaActions.js';
 describe("Get Collection Meta", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -24,17 +24,20 @@ describe("Get Collection Meta", () => {
             let collectionName;
             for (let i=0; i<playersCollections.length; i++) {
                 collectionName=playersCollections[i].name;
-                const data = await getCollectionMeta(client,"Players",i+1);
+                let n = i+1
+                const data = await getMeta(client,"Players" + n);
                 expect(data.name).toBe(collectionName)
             }
             for (let i=0; i<gamesCollections.length; i++) {
                 collectionName=gamesCollections[i].name;
-                const data = await getCollectionMeta(client,"Games",i+1);
+                let n = i+1
+                const data = await getMeta(client,"Games" + n);
                 expect(data.name).toBe(collectionName)
             }
             for (let i=0; i<gameServers.length; i++) {
                 collectionName=gameServers[i].name;
-                const data = await getCollectionMeta(client,"S",i+1);
+                let n = i+1
+                const data = await getMeta(client,"S" + n);
                 expect(data.name).toBe(collectionName)
             }
             await disconnect(client);

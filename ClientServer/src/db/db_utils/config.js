@@ -16,6 +16,14 @@ export async function config(client) {
     await metaCollection.insertOne(
         structure["Meta"]
     );
+    for (let collectionData of structure["Meta"]["playersCollections"]) {
+        const collection = client.db("DB1").collection(collectionData.name);
+        await collection.deleteMany({});
+    }
+    for (let collectionData of structure["Meta"]["gamesCollections"]) {
+        const collection = client.db("DB1").collection(collectionData.name);
+        await collection.deleteMany({});
+    }
     console.log('db configured');
 }
 

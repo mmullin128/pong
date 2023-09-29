@@ -2,12 +2,10 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import jsonFromFile from '../../../utils/jsonFromFile.js';
 import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js';
 
-import { addPlayer } from '../../../src/db/addPlayer.js';
-import { removePlayer } from '../../../src/db/removePlayer.js';
-import { getCollectionMeta } from '../../../src/db/getCollectionMeta.js';
+import { insert } from '../../../src/db/insert.js';
+import { remove } from '../../../src/db/remove.js';
 describe("Add and Remove Players", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -18,17 +16,15 @@ describe("Add and Remove Players", () => {
         const client = mongoClient(DB_URI);
         await connect(client);
         const players = [];
-        const n = 1;
+        const n = 6;
         try {        
             for (let i=0; i<n; i++) {
-                const player = await addPlayer(client,1);
+                const player = await insert(client,"Player");
                 //console.log(`${i}: `, player.id , player.collectionCode);
                 players.push(player);
             }
             for (let i=0; i<n; i++) {
-                const collectionData = await getCollectionMeta(client,'Players',0,players[i].collectionCode);
-                //console.log(`${i}`,'remove', collectionData.name);
-                await removePlayer(client,collectionData.name,players[i].id);
+                await remove(client,"P",players[i].id,players[i].collectionCode);
             }
             await disconnect(client);
         } catch (err) {
