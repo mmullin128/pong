@@ -20,5 +20,5 @@ describe("server functions", () => {
         expect(server.status).toBe('running');
         const endStatus = await closeServer(server);
         expect(endStatus).toBe('closed');
-    })
+    }, 5000)
 })

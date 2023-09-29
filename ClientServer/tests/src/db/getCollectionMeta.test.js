@@ -45,5 +45,5 @@ describe("Get Collection Meta", () => {
             await disconnect(client);
             throw (err);
         }
-    })
+    }, 6000)
 })

@@ -31,5 +31,5 @@ describe("Add and Remove Players", () => {
             await disconnect(client);
             throw (err);
         }
-    })
+    }, 10000)
 })

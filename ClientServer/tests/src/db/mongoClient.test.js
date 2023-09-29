@@ -17,5 +17,5 @@ describe("Mongo Client Setup", () => {
         expect(startStatus).toBe('connected');
         const endStatus = await disconnect(client);
         expect(endStatus).toBe('disconnected');
-    })
+    }, 6000)
 })

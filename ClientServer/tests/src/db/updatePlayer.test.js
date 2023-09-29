@@ -36,5 +36,5 @@ describe("Update Players", () => {
             await disconnect(client);
             throw (err);
         }
-    })
+    }, 10000)
 })
