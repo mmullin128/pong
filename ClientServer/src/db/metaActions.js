@@ -41,6 +41,7 @@ export async function increment(mongoClient,collectionName,i=1) {
     query[metaArrayName + '.' + "name"] = collectionName;
     let update = { $inc: {}};
     update["$inc"][metaArrayName + '.$[i].' + "current"] = i;
+    console.log("inc", i);
     await metaCollection.updateOne(
         query,
         update,

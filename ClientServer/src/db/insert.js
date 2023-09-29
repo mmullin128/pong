@@ -9,6 +9,7 @@ export async function insert(mongoClient,type,collectionNum=1) {
     if (type.charAt(0) == 'P') type = "Players";
     if (type.charAt(0) == 'G') type = "Games";
     const collectionData = await getMeta(mongoClient,type + collectionNum);
+    console.log(`${collectionNum}: `, collectionData.current,collectionData.max);
     if (collectionData.current < collectionData.max) {
         let id = generateID(4,collectionData.collectionCode);
         while (await hasID(mongoClient,collectionData.name,id)) {
@@ -16,11 +17,14 @@ export async function insert(mongoClient,type,collectionNum=1) {
         }
         const doc = { id: id };
         const collection = mongoClient.db("DB1").collection(collectionData.name);
+        
+        console.log(`adding: `, id ,collectionData.name);
         await collection.insertOne(doc);
         await increment(mongoClient,collectionData.name);
         const updatedCollectionData = await getMeta(mongoClient,type + collectionNum);
         if (updatedCollectionData.current > updatedCollectionData.max) {
             console.log('overflow', collectionData.name,id);
+            console.log(`removing: `, id ,collectionData.name);
             await remove(mongoClient,collectionData.name,id);
             return insert(mongoClient,type,collectionNum+1);
         } else {
