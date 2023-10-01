@@ -18,7 +18,6 @@ export const connect = (dbClient) => new Promise((resolve,reject) => {
     dbClient.connect()
     .catch((err) => reject(err))
     .then(() => {
-        console.log('db connected');
         resolve("connected")
     });
 });
@@ -27,7 +26,6 @@ export const disconnect = (dbClient) => new Promise((resolve,reject) => {
     dbClient.close()
     .catch((err) => reject(err))
     .then(() => {
-        console.log('db disconnected');
         resolve("disconnected")
     });
 });

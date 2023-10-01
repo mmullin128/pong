@@ -28,7 +28,7 @@ describe.only("Update Players", () => {
                 players.push(player);
             }
             for (let i=0; i<n; i++) {
-                await update(client,"P",players[i].id,"playerData",playerData,players[i].collectionCode);
+                await update(client, "P", players[i].id, players[i].collectionCode, "playerData", playerData);
                 //await removePlayer(client,collectionData.name,players[i].id);
             }
             for (let i=0; i<n; i++) {

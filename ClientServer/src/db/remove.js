@@ -1,13 +1,10 @@
 import { decrement, getMeta } from "./metaActions.js";
 
-export async function remove(mongoClient,collectionName,id,collectionCode) {
+export async function remove(mongoClient,type,id,collectionCode) {
     //adds player to appropriate collection recursively
     //add player to collection and increment meta
-    if (collectionCode != undefined) {
-        const collectionData = await getMeta(mongoClient,collectionName,collectionCode);
-        collectionName = collectionData.name;
-    }
-    const collection = mongoClient.db("DB1").collection(collectionName);
+    const collectionData = await getMeta(mongoClient,type,collectionCode);
+    const collection = mongoClient.db("DB1").collection(collectionData.name);
     await collection.deleteOne({ id: id });
-    await decrement(mongoClient,collectionName);
+    await decrement(mongoClient,collectionData.name);
 }

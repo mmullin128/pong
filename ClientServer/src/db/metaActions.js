@@ -1,32 +1,52 @@
 
 import { NoSuchCollectionError } from "../errors/errors.js";
 
-export async function getMeta(mongoClient,collectionName,collectionCode) {
+export async function getMeta(mongoClient,type,collectionCode) {
     const metaCollection = mongoClient.db("DB1").collection("Meta");
     //query for document in gameServers array with collection name PlayersN or GamesN
     let query = {};
     let projection = { _id: 0 };
     let metaArrayName;
-    if (collectionName.charAt(0) == "P") {
+    if (type.charAt(0) == "P") {
         metaArrayName = "playersCollections";
-    } else if (collectionName.charAt(0) == "G") {
+    } else if (type.charAt(0) == "G") {
         metaArrayName = "gamesCollections";
-    } else if (collectionName.charAt(0) == "S") {
-        metaArrayName = "gameServers";
     }
-    if (collectionCode == undefined) {
-        query[ metaArrayName + '.' + "name"] = collectionName;
-        projection[metaArrayName] = { $elemMatch: { "name": collectionName }};
+    if (type.charAt(0) == "S") {
+        metaArrayName = "gameServers";
+        query[ metaArrayName + '.' + "name"] = collectionCode;
+        projection[metaArrayName] = { $elemMatch: { "name": collectionCode }};
     } else {
+            
         query[ metaArrayName + '.' + "collectionCode"] = collectionCode;
         projection[metaArrayName] = { $elemMatch: { "collectionCode": collectionCode }};
+
     }
     const document = await metaCollection.findOne(query, { projection: projection });
-    if (!document) throw new NoSuchCollectionError(collectionName + '/' + collectionCode);
+    if (!document) throw new NoSuchCollectionError(type, ' / ', metaArrayName, ' / ', collectionCode);
     const data = document[metaArrayName][0];
     return data;
 }
 
+export async function getCodes(mongoClient,type) {
+    if (type.charAt(0) == 'P') type = "Players";
+    if (type.charAt(0) == 'G') type = "Games";
+    const metaCollection = mongoClient.db("DB1").collection("Meta");
+    let metaArrayName;
+    if (type == "Players")  metaArrayName = "playersCollections";
+    if (type == "Games")  metaArrayName = "gamesCollections";
+    let projection = {};
+    projection["_id"] = 0;
+    projection[metaArrayName] = { "collectionCode": 1 };
+    const meta = await metaCollection.findOne(
+        {},
+        {
+            projection: projection
+        }
+    );
+    const codes = meta.playersCollections.map((obj) => { return obj.collectionCode});
+    return codes;
+}
 
 
 
@@ -41,7 +61,6 @@ export async function increment(mongoClient,collectionName,i=1) {
     query[metaArrayName + '.' + "name"] = collectionName;
     let update = { $inc: {}};
     update["$inc"][metaArrayName + '.$[i].' + "current"] = i;
-    console.log("inc", i);
     await metaCollection.updateOne(
         query,
         update,

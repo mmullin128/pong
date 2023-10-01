@@ -25,20 +25,20 @@ describe("Get Collection Meta", () => {
             for (let i=0; i<playersCollections.length; i++) {
                 collectionName=playersCollections[i].name;
                 let n = i+1
-                const data = await getMeta(client,"Players" + n);
+                const data = await getMeta(client,"Players",playersCollections[i].collectionCode);
                 expect(data.name).toBe(collectionName)
             }
             for (let i=0; i<gamesCollections.length; i++) {
                 collectionName=gamesCollections[i].name;
                 let n = i+1
-                const data = await getMeta(client,"Games" + n);
+                const data = await getMeta(client,"Games",gamesCollections[i].collectionCode);
                 expect(data.name).toBe(collectionName)
             }
             for (let i=0; i<gameServers.length; i++) {
-                collectionName=gameServers[i].name;
+                const serverName=gameServers[i].name;
                 let n = i+1
-                const data = await getMeta(client,"S" + n);
-                expect(data.name).toBe(collectionName)
+                const data = await getMeta(client,"Servers",gameServers[i].name);
+                expect(data.name).toBe(serverName)
             }
             await disconnect(client);
         } catch (err) {
