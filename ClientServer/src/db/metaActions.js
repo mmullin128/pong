@@ -14,8 +14,10 @@ export async function getMeta(mongoClient,type,collectionCode) {
     }
     if (type.charAt(0) == "S") {
         metaArrayName = "gameServers";
-        query[ metaArrayName + '.' + "name"] = collectionCode;
-        projection[metaArrayName] = { $elemMatch: { "name": collectionCode }};
+        if (collectionCode) {
+            query[ metaArrayName + '.' + "name"] = collectionCode;
+            projection[metaArrayName] = { $elemMatch: { "name": collectionCode }};
+        }
     } else {
             
         query[ metaArrayName + '.' + "collectionCode"] = collectionCode;
@@ -25,8 +27,13 @@ export async function getMeta(mongoClient,type,collectionCode) {
     const document = await metaCollection.findOne(query, { projection: projection });
     //console.log(query, projection,document);
     if (!document) throw new NoSuchCollectionError(type + ' / ' + metaArrayName + ' / ' + collectionCode);
-    const data = document[metaArrayName][0];
-    return data;
+    if (collectionCode) {
+        const data = document[metaArrayName][0];
+        return data;
+    } else {
+        const data = document[metaArrayName];
+        return data;
+    }
 }
 
 export async function getCodes(mongoClient,type) {

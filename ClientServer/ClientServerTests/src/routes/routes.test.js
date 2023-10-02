@@ -9,6 +9,8 @@ import { request } from '../../public/request'; //test request function using ax
 import { createPrivateGame } from '../../../public/createPrivateGame';
 import { joinWithCode } from '../../../public/joinWithCode';
 import { reserveSpot } from '../../../public/reserveSpot';
+import { getServers } from '../../../public/getServers';
+import { findMatch } from '../../../public/findMatch';
 
 import { WebSocket } from 'ws';
 
@@ -36,6 +38,13 @@ describe("server functions", () => {
             const html = await axios.get(baseURL);
             expect(html).toBeTruthy();
             console.log('got home page');
+
+            //get servers
+            const serversResponse = await getServers(request);
+            expect(serversResponse.servers.length > 0);
+            console.log(serversResponse.servers);
+
+
             //create private game
             const createResponse = await createPrivateGame({ "gameSettings": { "max": 3 } }, request);
             const { id, coll, link} = createResponse;
@@ -55,9 +64,16 @@ describe("server functions", () => {
             expect(joinResponse).toBeTruthy();
             for (let i=0;i<4;i++) {
                 const pResponse = await reserveSpot(request);
+                console.log('tite ',pResponse, id);
                 const pJoinResponse = await joinWithCode(id,pResponse.id,pResponse.coll,request);
+                expect(pJoinResponse).toBeTruthy();
             }
-
+            //find match
+            for (let i=0;i<1;i++) {
+                const pResponse = await reserveSpot(request);
+                const pJoinResponse = await findMatch(pResponse.id,pResponse.coll,request);
+                expect(pJoinResponse).toBeTruthy();
+            }
         } catch(err) {
             console.error(err);
         } finally {

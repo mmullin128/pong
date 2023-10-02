@@ -8,6 +8,7 @@ import { update } from '../../../src/db/update.js';
 import { get } from '../../../src/db/get.js';
 import { remove } from '../../../src/db/remove.js';
 import { addPlayer } from '../../../src/db/addPlayer.js';
+import { getMeta } from '../../../src/db/metaActions.js';
 
 
 describe("Database Actions", () => {
@@ -33,8 +34,14 @@ describe("Database Actions", () => {
             expect(updateResponse).toBeTruthy();
             console.log("updated player");
             //get player
-            const getResponse = await get(client,"Player",playerResponse.id,playerResponse.collectionCode);
+            let getResponse = await get(client,"Player",playerResponse.id,playerResponse.collectionCode);
             expect(getResponse).toBeTruthy();
+            //get game
+            getResponse = await get(client,"Game",gameResponse.id,gameResponse.collectionCode);
+            expect(getResponse).toBeTruthy();
+            //get servers
+            getResponse = await getMeta(client,"Servers");
+            expect(getResponse.length > 0);
             //addplayer
             const addResponse = await addPlayer(client,gameResponse.id,gameResponse.collectionCode,playerResponse.id,playerResponse.collectionCode);
             expect(addResponse).toBeTruthy();

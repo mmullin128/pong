@@ -34,43 +34,36 @@ export async function addPlayer(mongoClient,gameID,gameCollectionCode,playerID,p
     );
     const updatedGame = await gameCollection.findOne({ id: gameID});
     if (updatedGame.players.length > game.max) {
-        await gameCollection.updateOne(
-            {
-                id: gameID
-            },
-            {
-                $set: {
-                    "players.$[i].playerStatus": "spectator"
-                }
-            },
-            {
-                arrayFilters: [
-                    { "i.id": playerID }
-                ]
-            }
-        )
-        await playerCollection.updateOne(
-            {
-                id: playerID
-            },
-            {
-                $set: {
-                    "playerStatus": "spectator"
-                }
-            }
-        )
-        return "spectator";
+        playerStatus = "spectator";
     } else {
-        await playerCollection.updateOne(
-            {
-                id: playerID
-            },
-            {
-                $set: {
-                    "playerStatus": "player"
-                }
-            }
-        )
-        return "player";
+        playerStatus = "player"
     }
+    await gameCollection.updateOne(
+        {
+            id: gameID
+        },
+        {
+            $set: {
+                "players.$[i].playerStatus": playerStatus
+            }
+        },
+        {
+            arrayFilters: [
+                { "i.id": playerID }
+            ]
+        }
+    )
+    await playerCollection.updateOne(
+        {
+            id: playerID
+        },
+        {
+            $set: {
+                "playerStatus": playerStatus,
+                "status": "InGame",
+                "gameID": gameID
+            }
+        }
+    )    
+    return playerStatus;
 }
