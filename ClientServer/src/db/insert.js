@@ -19,6 +19,9 @@ export async function insert(mongoClient,type,codes,collectionNum=1) {
             id = generateID(4,collectionData.collectionCode);
         }
         const doc = { id: id, status: "Idle", time: Date.now() };
+        if (type.charAt(0) == "G") {
+            doc["players"] = [];
+        }
         const collection = mongoClient.db("DB1").collection(collectionData.name);
         //console.log(`adding: `, id ,collectionData.name);
         await collection.insertOne(doc);

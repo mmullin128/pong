@@ -23,7 +23,8 @@ export async function getMeta(mongoClient,type,collectionCode) {
 
     }
     const document = await metaCollection.findOne(query, { projection: projection });
-    if (!document) throw new NoSuchCollectionError(type, ' / ', metaArrayName, ' / ', collectionCode);
+    //console.log(query, projection,document);
+    if (!document) throw new NoSuchCollectionError(type + ' / ' + metaArrayName + ' / ' + collectionCode);
     const data = document[metaArrayName][0];
     return data;
 }
@@ -37,14 +38,16 @@ export async function getCodes(mongoClient,type) {
     if (type == "Games")  metaArrayName = "gamesCollections";
     let projection = {};
     projection["_id"] = 0;
-    projection[metaArrayName] = { "collectionCode": 1 };
+    projection[metaArrayName + '.' + "collectionCode"] = 1;
     const meta = await metaCollection.findOne(
         {},
+        /*
         {
             projection: projection
         }
+        */
     );
-    const codes = meta.playersCollections.map((obj) => { return obj.collectionCode});
+    const codes = meta[metaArrayName].map((obj) => { return obj.collectionCode});
     return codes;
 }
 

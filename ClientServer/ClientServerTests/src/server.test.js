@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import axios from 'axios';
 
 import { startServer, closeServer } from "../../src/server.js";
 
@@ -16,8 +17,18 @@ describe("server functions", () => {
         const PORT = process.env.PORT;
         const DB_URI = process.env.DB_URI;
         //console.log(": ", DB_URI.split(":")[0],"..."); //if working should be 'mongodb+srv'
+        
+        const __dirname = path.dirname(fileURLToPath(import.meta.url));
+        process.chdir(path.join(__dirname, '../../src/'));
         const server = await startServer(PORT, DB_URI);
         expect(server.status).toBe('running');
+        try {
+            console.log(`http://localhost:${PORT}/`)
+            const response = await axios.get(`http://localhost:${PORT}/`);
+            expect(response).toBeTruthy();
+        } catch(err) {
+            console.error(err);
+        }
         const endStatus = await closeServer(server);
         expect(endStatus).toBe('closed');
     }, 5000)

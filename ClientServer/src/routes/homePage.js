@@ -8,6 +8,7 @@ export function homePage(req, res) {
             res.status(200).send(html);
         });
     } catch (err) {
+        console.error(err);
         errorPage(req,res);
     }
 }

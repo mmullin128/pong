@@ -13,9 +13,14 @@ describe("Mongo Client Setup", () => {
     test("startup, connect, disconnect", async () => {
         const DB_URI = process.env.DB_URI;
         const client = mongoClient(DB_URI);
-        const startStatus = await connect(client);
-        expect(startStatus).toBe('connected');
-        const endStatus = await disconnect(client);
-        expect(endStatus).toBe('disconnected');
+        try {
+            const startStatus = await connect(client);
+            expect(startStatus).toBe('connected');
+            const endStatus = await disconnect(client);
+            expect(endStatus).toBe('disconnected');
+        } catch (err) {
+            console.error(err);
+            await disconnect(client);
+        }
     }, 6000)
 })

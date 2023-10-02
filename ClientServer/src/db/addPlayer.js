@@ -5,7 +5,7 @@ export async function addPlayer(mongoClient,gameID,gameCollectionCode,playerID,p
     //adds player to appropriate collection recursively
     //add player to collection and increment meta
     const gameCollectionData = await getMeta(mongoClient,"Game",gameCollectionCode);
-    const playerCollectionData = await getMeta(mongoClient,"Game",playerCollectionCode);
+    const playerCollectionData = await getMeta(mongoClient,"Player",playerCollectionCode);
     const gameCollection = mongoClient.db("DB1").collection(gameCollectionData.name);
     const playerCollection = mongoClient.db("DB1").collection(playerCollectionData.name);
 
@@ -14,7 +14,7 @@ export async function addPlayer(mongoClient,gameID,gameCollectionCode,playerID,p
     let updateDoc = {};
     let playerStatus;
     if (game.players.length > game.max) {
-        gameStatus = "spectator";
+        playerStatus = "spectator";
     } else {
         playerStatus = "player";
     }

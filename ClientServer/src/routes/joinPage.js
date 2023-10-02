@@ -13,17 +13,12 @@ import { joinWithCode } from "./joinWithCode.js";
 // else:
 //  render html with status set to select username,
 //  pass to join game middleware
-export async function joinWithLink(dbClient,req, res) {
+export async function joinPage(dbClient,req, res) {
     try {
-        req.body.gameID = req.params.gameID;
-        req.body.collectionCode = req.params.coll;
-        const game = await get(dbClient,"Game",req.body.gameID,req.body.collectionCode);
-        if (!game) throw new Error(`Couldn';t find: ${req.body.gameID},${req.body.collectionCode}`);
-        const { id, collectionCode } = await insert(dbClient,"Player");
-        const playerStatus = await addPlayer(dbClient,req.body.gameID,req.body.collectionCode,id,collectionCode);
+        //render username page
         res.render('index', {mainMenuDisplay: "none", usernameDisplay: "flex"}, (err,html) => {
             if (err) throw err;
-            res.status(200).json({ html: html, data: { id: id, coll: collectionCode }})
+            res.status(200).send(html);
         });
     } catch (err) {
         console.error(err);

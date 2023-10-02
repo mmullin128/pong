@@ -5,11 +5,12 @@ import { WebSocketServer } from 'ws';
 import cors from 'cors';
 
 import { homePage } from './routes/homePage.js';
-import { joinWithLink } from './routes/joinWithLink.js';
+import { joinPage } from './routes/joinPage.js';
 import { joinWithCode } from './routes/joinWithCode.js';
 import { getServers } from './routes/getServers.js';
 import { findMatch } from './routes/findMatch.js';
 import { errorPage } from './routes/errorPage.js';
+import { reserveSpot } from './routes/reserveSpot.js';
 
 import { addPlayerData } from './events/addPlayerData.js';
 import { checkPrivateGame } from './events/checkPrivateGame.js';
@@ -20,13 +21,14 @@ import { connect } from './events/connect.js';
 import { disconnect } from './events/disconnect.js';
 import { readyUp } from './events/readyUp.js';
 import { reconnect } from './events/reconnect.js';
-import { reserveSpot } from './events/reserveSpot.js';
 import { setUsername } from './events/setUsername.js';
 
 import { connect as connectDB, disconnect as disconnectDB, mongoClient } from './db/mongoClient.js';
+import { createPrivateGame } from './routes/createPrivateGame.js';
 
 export const startServer = (port,databaseURI) => new Promise((resolve,reject) => {
     try {
+        console.log(databaseURI);
         const dbClient = mongoClient(databaseURI);
         const app = express();
         app.use(bodyParser.json({limit: "30mb", extended: "true"}));
@@ -37,14 +39,17 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
 
         //CLient URLS
         //request homepage
-        app.get('/', (req,res) => homePage(dbClient,req,res));
+        app.get('/', (req,res) => homePage(req,res));
         //join game with link
-        app.get('/pv/:gameID(\\w{4})/:coll(\\w{4})', (req,res) => joinWithLink(dbClient,req,res)) //4 character gameID encoded into url
+        app.get('/pv/:gameID(\\w{4})/', (req,res) => joinPage(dbClient,req,res)) //4 character gameID encoded into url
         //err
         app.get('/err', errorPage);
         //API calls
         //join game with gameID [JSON]
         app.get('/joinPrivateGame', (req,res) => joinWithCode(dbClient,req,res));
+        app.get('/reserveSpot', (req,res) => reserveSpot(dbClient,req,res));
+        //join game with gameID [JSON]
+        app.get('/createPrivateGame', (req,res) => createPrivateGame(dbClient,req,res));
         //get list of gameServer urls
         app.get('/getServers',(req,res) => getServers(dbClient,req,res));
         //update player to be available for match making

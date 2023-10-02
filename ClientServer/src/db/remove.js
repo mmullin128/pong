@@ -7,4 +7,8 @@ export async function remove(mongoClient,type,id,collectionCode) {
     const collection = mongoClient.db("DB1").collection(collectionData.name);
     await collection.deleteOne({ id: id });
     await decrement(mongoClient,collectionData.name);
+    
+    return {
+        message: "success"
+    }
 }
