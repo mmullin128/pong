@@ -1,10 +1,10 @@
 import { update } from "../db/update.js";
 export async function readyUp(dbClient,data) {
-    const { id, collectionCode } = data;
+    const { id, coll } = data;
     //reserves spot in database and gets an id and collection key;
-    await update(dbClient,"Player",id,collectionCode,"ready",1);
+    await update(dbClient,"Player",id,coll,{ "ready":1 });
     const response = {
-        message: "success",
+        name: "success",
         body: {}
     }
     return response;

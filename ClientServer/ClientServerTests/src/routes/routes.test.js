@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import axios from 'axios';
 import { startServer, closeServer } from '../../../src/server';
 
-import { request } from '../../public/request'; //test request function using axios
+import { createRequest } from '../../public/request'; //test request function using axios
 
 import { createPrivateGame } from '../../../public/createPrivateGame';
 import { joinWithCode } from '../../../public/joinWithCode';
@@ -23,7 +23,8 @@ describe("server functions", () => {
         
     });
     test("routes", async () => {
-        const PORT = process.env.PORT + 1;
+        const PORT = parseInt(process.env.PORT,10) + 1;
+        const req = await createRequest(PORT);
         const DB_URI = process.env.DB_URI;
         //console.log(": ", DB_URI.split(":")[0],"..."); //if working should be 'mongodb+srv'
         //start server
@@ -32,46 +33,47 @@ describe("server functions", () => {
         const server = await startServer(PORT, DB_URI);
         const baseURL = `http://localhost:${PORT}`
         try {
-            //console.log(`http://localhost:${PORT}/`)
             //homepage
-            console.log(baseURL);
             const html = await axios.get(baseURL);
             expect(html).toBeTruthy();
-            console.log('got home page');
 
             //get servers
-            const serversResponse = await getServers(request);
+            const serversResponse = await getServers(req);
             expect(serversResponse.servers.length > 0);
-            console.log(serversResponse.servers);
+            //console.log(serversResponse.servers);
 
 
             //create private game
-            const createResponse = await createPrivateGame({ "gameSettings": { "max": 3 } }, request);
+            const createResponse = await createPrivateGame({ "gameSettings": { "max": 3 } }, req);
             const { id, coll, link} = createResponse;
             expect(id).toBeTruthy();
             expect(coll).toBeTruthy();
             expect(link).toBeTruthy();
+
             //reserve spot
-            const reserveResponse = await reserveSpot(request);
+            const reserveResponse = await reserveSpot(req);
             expect(reserveResponse.id).toBeTruthy();
             expect(reserveResponse.coll).toBeTruthy();
+
             //join with link
             const gameURL = baseURL + `${link}`
             const joinHTML = await axios.get(gameURL);
             expect(joinHTML).toBeTruthy()
+
             //join with code
-            const joinResponse = await joinWithCode(id,reserveResponse.id,reserveResponse.coll,request);
+            const joinResponse = await joinWithCode(id,reserveResponse.id,reserveResponse.coll,req);
             expect(joinResponse).toBeTruthy();
             for (let i=0;i<4;i++) {
-                const pResponse = await reserveSpot(request);
-                console.log('tite ',pResponse, id);
-                const pJoinResponse = await joinWithCode(id,pResponse.id,pResponse.coll,request);
+                const pResponse = await reserveSpot(req);
+                //console.log('tite ',pResponse, id);
+                const pJoinResponse = await joinWithCode(id,pResponse.id,pResponse.coll,req);
                 expect(pJoinResponse).toBeTruthy();
             }
+
             //find match
             for (let i=0;i<1;i++) {
-                const pResponse = await reserveSpot(request);
-                const pJoinResponse = await findMatch(pResponse.id,pResponse.coll,request);
+                const pResponse = await reserveSpot(req);
+                const pJoinResponse = await findMatch(pResponse.id,pResponse.coll,req);
                 expect(pJoinResponse).toBeTruthy();
             }
         } catch(err) {

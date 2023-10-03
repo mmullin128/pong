@@ -12,7 +12,7 @@ import { addPlayer } from "../db/addPlayer.js";
 //  pass to join game middleware
 export async function joinWithCode(dbClient,req, res) {
     try {
-        console.log('join with code', req.body);
+        //console.log('join with code', req.body);
         const gameID = req.body.gameID;
         const gameCollectionCode = gameID.charAt(0);
         const id = req.body.id;

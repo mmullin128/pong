@@ -28,7 +28,6 @@ import { createPrivateGame } from './routes/createPrivateGame.js';
 
 export const startServer = (port,databaseURI) => new Promise((resolve,reject) => {
     try {
-        console.log(databaseURI);
         const dbClient = mongoClient(databaseURI);
         const app = express();
         app.use(bodyParser.json({limit: "30mb", extended: "true"}));
@@ -60,7 +59,8 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
         server.dbClient = dbClient;
         const socketServer = new WebSocketServer({ server: server});
         socketServer.on("connection", socket => {
-            socket.on("message", async message => {
+            socket.on("message", async data => {
+                const message = await JSON.parse(data);
                 let response;
                 switch (message.name) {
                     case "addPlayerData":
@@ -97,9 +97,13 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
                         break;
                     default:
                         response = {
-                            message: "error",
+                            name: "error",
                             body: {
-                                error: "invalid socket event"
+                                "error": "invalid socket event",
+                                request: {
+                                    "name": message.name,
+                                    "body": message.body,
+                                }
                             }
                         }
                 }
@@ -109,6 +113,7 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
         try {
             server.listen(port, async () => {
                 await connectDB(server.dbClient);
+                console.log('listening on port: ', port);
                 server.status = 'running';
                 resolve(server);
             })
@@ -124,9 +129,11 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
 
 export const closeServer = (server) => new Promise((resolve,reject) => {
     try {
+        if (server.status == 'closed') resolve(server.status);
         server.close( async ()=> {
             const message = await disconnectDB(server.dbClient);
-            resolve('closed');
+            server.status = 'closed';
+            resolve(server.status);
         })
     } catch (err) {
         reject(err);

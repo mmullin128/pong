@@ -5,7 +5,7 @@ export async function checkPrivateGame(dbClient,data) {
     const collectionCode = gameID.charAt(0);
     const gameData = await get(dbClient,"Games",id,collectionCode);
     const response = {
-        message: "success",
+        name: "success",
         body: gameData
     }
     return response;

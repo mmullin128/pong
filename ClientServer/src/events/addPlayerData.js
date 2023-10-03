@@ -1,11 +1,16 @@
 import { update } from "../db/update.js";
 export async function addPlayerData(dbClient,data) {
-    const { id, collectionCode, playerData } = data;
+    const { id, coll, playerData } = data;
     //reserves spot in database and gets an id and collection key;
-    await update(dbClient,"Player",id,collectionCode,"playerData",playerData);
+    await update(dbClient,"Player",id,coll,{ "playerData": playerData });
     const response = {
-        message: "success",
-        body: {}
+        name: "success",
+        body: {
+            "request": {
+                "name": "addPlayerData",
+                "body": data 
+            }
+        }
     }
     return response;
 }

@@ -28,11 +28,11 @@ describe("Database Actions", () => {
             //insert player
             const playerResponse = await insert(client,"Player");
             expect(playerResponse.id).toBeTruthy();
-            console.log("inserted player");
+            //console.log("inserted player");
             //update player
             const updateResponse = await update(client,"Player",playerResponse.id,playerResponse.collectionCode,{"test": true});
             expect(updateResponse).toBeTruthy();
-            console.log("updated player");
+            //console.log("updated player");
             //get player
             let getResponse = await get(client,"Player",playerResponse.id,playerResponse.collectionCode);
             expect(getResponse).toBeTruthy();

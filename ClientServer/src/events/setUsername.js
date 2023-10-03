@@ -1,13 +1,13 @@
 import { update } from "../db/update.js";
 import { checkUsername } from "../db/checkUsername.js";
 export async function setUsername(dbClient,data) {
-    const { id, collectionCode, username } = data;
+    const { id, coll, username } = data;
     //reserves spot in database and gets an id and collection key;
-    const taken = await checkUsername(dbClient,id,collectionCode,username);
+    const taken = await checkUsername(dbClient,id,coll,username);
     if (!taken) {
-        await update(dbClient,"Player",id,collectionCode,"username",username);
+        await update(dbClient,"Player",id,coll,{ "username": username });
         const response = {
-            message: "success",
+            name: "success",
             body: {
                 username: username
             }
@@ -15,7 +15,7 @@ export async function setUsername(dbClient,data) {
         return response;
     } 
     return {
-        message: "failed",
+        name: "failed",
         body: {
             error: "UsernameTaken"
         }

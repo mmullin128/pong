@@ -16,7 +16,7 @@ import { joinWithCode } from "./joinWithCode.js";
 export async function createPrivateGame(dbClient,req, res) {
     try {
         const { id, collectionCode } = await insert(dbClient,"Game");
-        console.log("create game", req.body);
+        //console.log("create game", req.body);
         await update(dbClient,"Game",id,collectionCode,{"gameSettings": req.body.gameSettings});
         await update(dbClient,"Game",id,collectionCode,{"max": req.body.gameSettings.max});
         res.status(200).json({

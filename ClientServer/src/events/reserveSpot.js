@@ -2,12 +2,12 @@ import { insert } from "../db/insert.js";
 
 export async function reserveSpot(dbClient,data) {
     //reserves spot in database and gets an id and collection key;
-    const { id, collectionCode } = await insert(dbClient,"Player");
+    const { id, coll } = await insert(dbClient,"Player");
     const response = {
-        message: "success",
+        name: "success",
         body: {
             id: id,
-            coll: collectionCode
+            coll: coll
         }
     }
     return response;
