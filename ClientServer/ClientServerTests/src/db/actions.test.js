@@ -9,6 +9,7 @@ import { get } from '../../../src/db/get.js';
 import { remove } from '../../../src/db/remove.js';
 import { addPlayer } from '../../../src/db/addPlayer.js';
 import { getMeta } from '../../../src/db/metaActions.js';
+import { checkUsername } from '../../../src/db/checkUsername.js';
 
 
 describe("Database Actions", () => {
@@ -28,7 +29,11 @@ describe("Database Actions", () => {
             //insert player
             const playerResponse = await insert(client,"Player");
             expect(playerResponse.id).toBeTruthy();
-            //console.log("inserted player");
+
+            //checkUsername
+            const checkResponse = await checkUsername(client,playerResponse.id,playerResponse.collectionCode,"Player1");
+            expect(checkResponse).toBe(true);
+            
             //update player
             const updateResponse = await update(client,"Player",playerResponse.id,playerResponse.collectionCode,{"test": true});
             expect(updateResponse).toBeTruthy();

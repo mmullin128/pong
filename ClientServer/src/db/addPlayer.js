@@ -44,7 +44,8 @@ export async function addPlayer(mongoClient,gameID,gameCollectionCode,playerID,p
         },
         {
             $set: {
-                "players.$[i].playerStatus": playerStatus
+                "players.$[i].playerStatus": playerStatus,
+                "players.$[i].team": "N"
             }
         },
         {

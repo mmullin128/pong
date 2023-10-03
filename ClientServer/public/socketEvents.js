@@ -46,8 +46,8 @@ export const chooseTeam = async (socket, id, gameID, team) => {
     await socket.sendMessage("chooseTeam",{ id: id, gameID: gameID, team: team });
     return true;
 }
-export const readyUp = async (socket, id, coll) => {
-    await socket.sendMessage("readyUp",{ id: id, coll: coll });
+export const readyUp = async (socket, id, coll, value) => {
+    await socket.sendMessage("readyUp",{ id: id, coll: coll, value: value });
     return true;
 }
 export const setUsername = async (socket, id, coll, username) => {

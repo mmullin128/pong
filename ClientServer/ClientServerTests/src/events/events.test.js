@@ -18,6 +18,7 @@ import { addPlayerData,
     readyUp,
     setUsername
  } from '../../../public/socketEvents';
+import { generateID } from '../../../utils/idGenerators';
 
 
 
@@ -84,6 +85,9 @@ describe("server functions", () => {
         const socketURL = `ws://localhost:${PORT}`;
         try {
             //reserve spot
+            const p1Name = generateID(5);
+            const p2Name = generateID(5);
+            const p3Name = generateID(5);
             const reserveResponse = await reserveSpot(req);
             const { id, coll } = reserveResponse;
             const createResponse = await createPrivateGame({ "max": 3 }, req);
@@ -121,22 +125,56 @@ describe("server functions", () => {
                 expect(message).not.toBe("timeout");           
                 expect(message.name).toBe("success");
 
+                messages = [];
+
                 //checkUsername
-                await checkUsername(socket,id,coll,"Player1")
+                await checkUsername(socket,id,coll,p1Name)
                 message = await lookForMessage("checkUsername",1000);
                 expect(message).not.toBe("timeout");    
-                console.log(message.body);       
-                expect(message.body.checkUsername.taken).toBe(false);
+                expect(message.body["taken"]).toBe(false);
 
+                messages = [];
+                
                 //chooseTeam
-                //await chooseTeam(socket,id,gameID,"A");
-                //message = await lookForMessage("success",1000);
-                //expect(message).not.toBe("timeout");           
-                //expect(message.name).toBe("success");
+                await chooseTeam(socket,id,gameID,"A");
+                message = await lookForMessage("success",1000);
+                expect(message).not.toBe("timeout");           
+                expect(message.name).toBe("success");
 
+                messages = [];
+                
                 //readyUp
+                await readyUp(socket,id,coll,1); 
+                message = await lookForMessage("success",1000);
+                expect(message).not.toBe("timeout");
 
-                //setUsername
+
+                messages = [];
+                
+                //setUsername -- private
+                await setUsername(socket,id,coll,p1Name);
+                message = await lookForMessage("success",1000);
+                expect(message).not.toBe("timeout");
+
+
+                messages = [];
+                
+                //setUsername -- public
+                let p2ReserveResponse = await reserveSpot(req);
+                await setUsername(socket,p2ReserveResponse.id,p2ReserveResponse.coll,p2Name);
+                message = await lookForMessage("success",1000);
+                expect(message).not.toBe("timeout");
+                
+                messages = [];
+
+                //setUsernameFail -- public
+                p2ReserveResponse = await reserveSpot(req);
+                await setUsername(socket,p2ReserveResponse.id,p2ReserveResponse.coll,p2Name);
+                message = await lookForMessage("checkUsername",1000);
+                expect(message).not.toBe("timeout");
+                expect(message.body.taken).toBe(true);
+
+
             } catch (err) {
                 console.log(err);
                 //throw err;

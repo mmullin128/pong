@@ -3,20 +3,17 @@ import { get } from "./get.js";
 import { UsernameTakenError } from "../errors/errors.js";
 
 export async function checkUsername(mongoClient,id,collectionCode,username) {
-    //adds player to appropriate collection recursively
-    //add player to collection and increment meta
+    //returns true if username is available
+
     const collectionData = await getMeta(mongoClient,"Player",collectionCode);
-    const collection = mongoClient.db("DB1").collection(collectionData.collectionCode);
+    const collection = mongoClient.db("DB1").collection(collectionData.name);
     const match = await collection.findOne(
         {
-            "username": username,
-            "id" : {
-                $not: { $eq: id}
-            }
+            "username": username
         }
     )
-    if (!match) {
-        return true;
+    if (!match || ( match == {} )) {
+        return true; 
     }
     return false;
 }
