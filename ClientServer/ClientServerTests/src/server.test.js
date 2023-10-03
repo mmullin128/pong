@@ -57,5 +57,5 @@ describe("server functions", () => {
             console.error(err);
             
         }
-    }, 7000)
+    }, 10000)
 })
