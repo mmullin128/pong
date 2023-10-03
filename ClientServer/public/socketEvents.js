@@ -25,34 +25,37 @@ export async function successMessage(messageBody) {
     return {"name": "success", "body": messageBody};
 }
 
-export const send = (socket,name,body) => { return new Promise((resolve,reject) => {
-    try {
-        const jsonString = JSON.stringify({name: name, body: body});
-        socket.send(jsonString);
-        resolve(true);
-    } catch (err) {
-        reject(err);
-    }
-})}
-export const addPlayerData = (socket, id, coll, playerData) => {
-    socket.sendMessage("addPlayerData",{ id: id, coll: coll, playerData: playerData});
+
+export const addPlayerData = async (socket, id, coll, playerData) => {
+    await socket.sendMessage("addPlayerData",{ id: id, coll: coll, playerData: playerData});
+    return true;
+}
+export const checkPrivateGame = async (socket, id, gameID) => {
+    await socket.sendMessage("checkPrivateGame",{ id: id, gameID: gameID});
+    return true;
+}
+export const checkStatus = async (socket, id, coll) => {
+    await socket.sendMessage("checkStatus",{ id: id, coll: coll });
+    return true;
+}
+export const checkUsername = async (socket, id, coll, username) => {
+    await socket.sendMessage("checkUsername",{ id: id, coll: coll, username: username });
+    return true;
+}
+export const chooseTeam = async (socket, id, gameID, team) => {
+    await socket.sendMessage("chooseTeam",{ id: id, gameID: gameID, team: team });
+    return true;
+}
+export const readyUp = async (socket, id, coll) => {
+    await socket.sendMessage("readyUp",{ id: id, coll: coll });
+    return true;
+}
+export const setUsername = async (socket, id, coll, username) => {
+    await socket.sendMessage("setUsername",{ id: id, coll: coll, username: username });
     return true;
 }
 
-export const checkUsername = (socket,username) => { return new Promise((resolve,reject) => {
-    try {
-        socket.send(JSON.stringify({name: "checkUsername", body: username}));
-        resolve();
-    } catch(err) {
-        reject(err);
-    }
-})}
 
-export const checkStatus = (socket,username) => { return new Promise((resolve,reject) => {
-    try {
-        socket.send(JSON.stringify({name: "checkUsername", body: username}));
-        resolve();
-    } catch(err) {
-        reject(err);
-    }
-})}
+
+
+

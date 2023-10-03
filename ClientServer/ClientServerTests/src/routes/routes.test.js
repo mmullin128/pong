@@ -44,7 +44,7 @@ describe("server functions", () => {
 
 
             //create private game
-            const createResponse = await createPrivateGame({ "gameSettings": { "max": 3 } }, req);
+            const createResponse = await createPrivateGame( { "max": 3 } , req);
             const { id, coll, link} = createResponse;
             expect(id).toBeTruthy();
             expect(coll).toBeTruthy();

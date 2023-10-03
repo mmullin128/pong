@@ -23,8 +23,11 @@ export const Socket = (url,events) => { return new Promise((resolve,reject) => {
             }
             console.log("no handler", name, body);
         })
-        socket.sendMessage = (messageName,messageBody) => {
-            socket.send(JSON.stringify({ name: messageName, body: messageBody }));
+        socket.sendMessage = async (messageName,messageBody) => {
+            socket.send(JSON.stringify({ name: messageName, body: messageBody }), (err) => {
+                if (err) throw err;
+                return 1;
+            });
         }
         socket.on("open", () => {
             //console.log(timeOutID);
@@ -38,3 +41,7 @@ export const Socket = (url,events) => { return new Promise((resolve,reject) => {
         reject(err);
     }
 })}
+
+export const events = [];
+
+export let messages = [];

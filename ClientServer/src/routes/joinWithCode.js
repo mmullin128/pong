@@ -20,7 +20,7 @@ export async function joinWithCode(dbClient,req, res) {
         const game = await get(dbClient,"Game",gameID,gameCollectionCode);
         if (!game) throw new Error(`Couldn't find: ${gameID},${gameCollectionCode}`);
         const playerStatus = await addPlayer(dbClient,gameID,gameCollectionCode,id,collectionCode);
-        res.status(200).json({});
+        res.status(200).json({ playerStatus: playerStatus });
     } catch (err) {
         console.error(err);
         errorPage(req,res);

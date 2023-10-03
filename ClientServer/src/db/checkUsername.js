@@ -10,8 +10,8 @@ export async function checkUsername(mongoClient,id,collectionCode,username) {
     const match = await collection.findOne(
         {
             "username": username,
-            "$not": {
-                "id": id
+            "id" : {
+                $not: { $eq: id}
             }
         }
     )

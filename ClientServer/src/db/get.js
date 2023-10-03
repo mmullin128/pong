@@ -6,7 +6,7 @@ export async function get(mongoClient,type,id,collectionCode) {
     const collectionData = await getMeta(mongoClient,type,collectionCode);
     const collectionName = collectionData.name;
     const collection = mongoClient.db("DB1").collection(collectionName);
-    const doc = await collection.findOne({ id: id });
+    const doc = await collection.findOne({ id: id }, { projection: { _id: 0 }});
     if (!doc) throw new InvalidIDError(type,id);
     return doc;
 }

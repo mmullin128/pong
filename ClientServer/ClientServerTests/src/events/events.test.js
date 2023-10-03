@@ -6,9 +6,21 @@ import { startServer, closeServer } from '../../../src/server';
 
 import { createRequest } from '../../public/request'; //test request function using axios
 import { reserveSpot } from '../../../public/reserveSpot';
+import { createPrivateGame } from '../../../public/createPrivateGame';
+import { joinWithCode } from '../../../public/joinWithCode';
 
 import { Socket } from '../../public/socket';
-import { addPlayerData } from '../../../public/socketEvents';
+import { addPlayerData,
+    checkPrivateGame,
+    checkStatus,
+    checkUsername,
+    chooseTeam,
+    readyUp,
+    setUsername
+ } from '../../../public/socketEvents';
+
+
+
 
 describe("server functions", () => {
     beforeAll(() => {
@@ -23,20 +35,20 @@ describe("server functions", () => {
         const addMessage = (name,body) => {
             messages.push({ name: name, body: body });
         }
-        const lookForMessage = (message) => new Promise((resolve, reject) => {
+        const lookForMessage = (name,ms) => new Promise((resolve, reject) => {
             const search = setInterval(() => {
                 for (let received of messages) {
-                    if (received.name == message) {
+                    if (received.name == name) {
                         clearTimeout(timeOut);
-                        resolve(received);
                         clearInterval(search);
+                        resolve(received);
                     }
                 }
-            }, .3);
+            }, 50);
             const timeOut = setTimeout(() => {
                 clearInterval(search);
-                reject(new Error("timeout"))
-            }, 1000);
+                resolve("timeout")
+            }, ms);
         })
         const events = [
             {
@@ -51,15 +63,15 @@ describe("server functions", () => {
                 "handler": (socket,body) => {
                     addMessage("success",body);
                 }
-            }
-        ]
-        const checkMessages = (name) => new Promise((resolve,reject) => {
-            for (let message of messages) {
-                if (message.name == name) {
-                    resolve(message);
+            },
+            
+            {
+                "name": "checkUsername",
+                "handler": (socket,body) => {
+                    addMessage("checkUsername",body);
                 }
             }
-        })
+        ];
         const PORT = parseInt(process.env.PORT,10) + 2;
         const req = await createRequest(PORT);
         const DB_URI = process.env.DB_URI;
@@ -73,8 +85,10 @@ describe("server functions", () => {
         try {
             //reserve spot
             const reserveResponse = await reserveSpot(req);
-            //console.log(reserveResponse);
             const { id, coll } = reserveResponse;
+            const createResponse = await createPrivateGame({ "max": 3 }, req);
+            const gameID = createResponse.id;
+            const joinResponse = await joinWithCode(gameID,id,coll,req);
             //connect to socket
             const socket = await Socket(socketURL,events);
             expect(socket).toBeTruthy();
@@ -82,18 +96,50 @@ describe("server functions", () => {
             try {
                 //addplayerdata
                 const playerData = { length: 1, speed: 1, turnSpeed: 1};
-                addPlayerData(socket,id,coll,playerData);
-                try {
-                    const errorMessage = await lookForMessage("error");
-                    console.log(errorMessage);
-                } catch (error) {
-                    expect(error.message).toBe("timeout");
-                }
-                const message = await lookForMessage("success");
+                await addPlayerData(socket,id,coll,playerData);
+                let message = await lookForMessage("success",1000);
+                expect(message).not.toBe("timeout");           
                 expect(message.name).toBe("success");
-                //
+
+                messages = [];
+
+                //check private game
+                await checkPrivateGame(socket,id,gameID);
+                message = await lookForMessage("success",1000);
+                if (message == "timeout") {
+                    let errorMessage = await lookForMessage("error",1000);
+                    console.log(errorMessage);
+                }
+                expect(message).not.toBe("timeout");           
+                expect(message.name).toBe("success");
+
+                messages = [];
+                
+                //check status
+                await checkStatus(socket,id,coll);
+                message = await lookForMessage("success",1000);
+                expect(message).not.toBe("timeout");           
+                expect(message.name).toBe("success");
+
+                //checkUsername
+                await checkUsername(socket,id,coll,"Player1")
+                message = await lookForMessage("checkUsername",1000);
+                expect(message).not.toBe("timeout");    
+                console.log(message.body);       
+                expect(message.body.checkUsername.taken).toBe(false);
+
+                //chooseTeam
+                //await chooseTeam(socket,id,gameID,"A");
+                //message = await lookForMessage("success",1000);
+                //expect(message).not.toBe("timeout");           
+                //expect(message.name).toBe("success");
+
+                //readyUp
+
+                //setUsername
             } catch (err) {
                 console.log(err);
+                //throw err;
             } finally {
                 socket.close();
             }

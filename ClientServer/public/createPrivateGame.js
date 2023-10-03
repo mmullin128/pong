@@ -1,5 +1,5 @@
 export const createPrivateGame = (gameSettings, request) => {return new Promise((resolve,reject) => {
-    request('/createPrivateGame','GET',gameSettings)
+    request('/createPrivateGame','GET',{ gameSettings: gameSettings })
     .catch(err => reject(err))
     .then(response => {
         resolve(response);
