@@ -1,6 +1,6 @@
 import { getMeta } from "./metaActions.js";
 
-export async function update(mongoClient,type,id,collectionCode,update, options) {
+export async function update(mongoClient,type,id,collectionCode,update,options) {
     //adds player to appropriate collection recursively
     //add player to collection and increment meta
     const collectionData = await getMeta(mongoClient,type,collectionCode);
@@ -12,7 +12,5 @@ export async function update(mongoClient,type,id,collectionCode,update, options)
     },
     options
     );
-    return {
-        message: "success"
-    }
+    return 1
 }

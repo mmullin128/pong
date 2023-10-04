@@ -4,7 +4,7 @@ html
         title= "Paddle Ball"
         link(rel="stylesheet", href="styles.css")
     body 
-        div.menu#main-menu(style={display: mainMenuDisplay})
+        div(class=`menu ${mainMenuDisplay}`, id="main-menu")
             h1#title Paddle Ball 
             button.menu-btn#play-btn Play Now 
             button.menu-btn#private-game-btn Private Game 
@@ -42,7 +42,7 @@ html
             br
             input(class="form-input", type="text", id="game-id-input", name="game-id-input", minlength="4", maxlength="4")
             button.go-btn#enter-room-id-btn Go
-        div.menu#username-alert(style={display: usernameDisplay})
+        div#username-alert(class=`alert ${usernameDisplay}`)
             //this will be alert class             
             label(class="form-label", for="username-input") Enter Username
             br
@@ -66,7 +66,6 @@ html
             button#side2 Bad Guys
             button.go-btn#change-color-btn Change Color 
             button.go-btn#ready-btn Ready
-        button#cancel-btn Cancel
 
         div#game-container 
             div#score-board
@@ -76,3 +75,5 @@ html
                 div.score#opponent-score 
                     h3.score-title#opponent-score-title Opponent
                     p.score-value#opponent-score-value 0
+        script(type="module", src="docEvents.js") 
+        script(type="module", src="index.js") 

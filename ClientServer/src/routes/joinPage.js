@@ -16,7 +16,7 @@ import { joinWithCode } from "./joinWithCode.js";
 export async function joinPage(dbClient,req, res) {
     try {
         //render username page
-        res.render('index', {mainMenuDisplay: "none", usernameDisplay: "flex"}, (err,html) => {
+        res.render('index', {mainMenuDisplay: "", usernameDisplay: "showing"}, (err,html) => {
             if (err) throw err;
             res.status(200).send(html);
         });

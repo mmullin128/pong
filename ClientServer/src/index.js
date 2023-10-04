@@ -1,7 +1,7 @@
 import { startServer, closeServer } from "./server.js";
 
 const PORT = process.env.PORT || 3000;
-const URI = process.env.URI;
+const DB_URI = process.env.DB_URI;
 
 
 startServer(PORT,URI)

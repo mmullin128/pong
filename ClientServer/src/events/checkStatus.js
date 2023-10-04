@@ -4,7 +4,7 @@ export async function checkStatus(dbClient,data) {
     //reserves spot in database and gets an id and collection key;
     const player = await get(dbClient,"Players",id,coll);
     const response = {
-        name: "success",
+        name: "checkStatus",
         body: {
             status: player.status
         }

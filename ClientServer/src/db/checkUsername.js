@@ -9,7 +9,12 @@ export async function checkUsername(mongoClient,id,collectionCode,username) {
     const collection = mongoClient.db("DB1").collection(collectionData.name);
     const match = await collection.findOne(
         {
-            "username": username
+            "username": username,
+            "id": {
+                $not: {
+                    $eq: id
+                }
+            }
         }
     )
     if (!match || ( match == {} )) {

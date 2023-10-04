@@ -65,11 +65,22 @@ describe("server functions", () => {
                     addMessage("success",body);
                 }
             },
-            
             {
                 "name": "checkUsername",
                 "handler": (socket,body) => {
                     addMessage("checkUsername",body);
+                }
+            },
+            {
+                "name": "checkPrivateGame",
+                "handler": (socket,body) => {
+                    addMessage("checkPrivateGame",body);
+                }
+            },
+            {
+                "name": "checkStatus",
+                "handler": (socket,body) => {
+                    addMessage("checkStatus",body);
                 }
             }
         ];
@@ -109,21 +120,18 @@ describe("server functions", () => {
 
                 //check private game
                 await checkPrivateGame(socket,id,gameID);
-                message = await lookForMessage("success",1000);
+                message = await lookForMessage("checkPrivateGame",1000);
                 if (message == "timeout") {
                     let errorMessage = await lookForMessage("error",1000);
                     console.log(errorMessage);
                 }
-                expect(message).not.toBe("timeout");           
-                expect(message.name).toBe("success");
-
+                expect(message).not.toBe("timeout");      
                 messages = [];
                 
                 //check status
                 await checkStatus(socket,id,coll);
-                message = await lookForMessage("success",1000);
-                expect(message).not.toBe("timeout");           
-                expect(message.name).toBe("success");
+                message = await lookForMessage("checkStatus",1000);
+                expect(message).not.toBe("timeout");       
 
                 messages = [];
 
@@ -165,6 +173,13 @@ describe("server functions", () => {
                 message = await lookForMessage("success",1000);
                 expect(message).not.toBe("timeout");
                 
+                messages = [];
+                
+                //reset username -- public
+                await setUsername(socket,p2ReserveResponse.id,p2ReserveResponse.coll,p2Name);
+                message = await lookForMessage("success",1000);
+                expect(message).not.toBe("timeout");
+
                 messages = [];
 
                 //setUsernameFail -- public

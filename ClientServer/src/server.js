@@ -18,9 +18,7 @@ import { checkStatus } from './events/checkStatus.js';
 import { checkUsername } from './events/checkUsername.js';
 import { chooseTeam } from './events/chooseTeam.js';
 import { connect } from './events/connect.js';
-import { disconnect } from './events/disconnect.js';
 import { readyUp } from './events/readyUp.js';
-import { reconnect } from './events/reconnect.js';
 import { setUsername } from './events/setUsername.js';
 
 import { connect as connectDB, disconnect as disconnectDB, mongoClient } from './db/mongoClient.js';
@@ -80,15 +78,16 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
                         break;
                     case "connect":
                         response = await connect(dbClient,message.body);
-                    case "disconnect":
-                        response = await disconnect(dbClient,message.body);
                         break;
+                    //case "disconnect":
+                    //    response = await disconnect(dbClient,message.body);
+                    //    break;
                     case "readyUp":
                         response = await readyUp(dbClient,message.body);
                         break;
-                    case "reconnect":
-                        response = await reconnect(dbClient,message.body);
-                        break;
+                    //case "reconnect":
+                    //    response = await reconnect(dbClient,message.body);
+                    //    break;
                     case "reserverSpot":
                         response = await reserveSpot(dbClient,message.body);
                         break;
