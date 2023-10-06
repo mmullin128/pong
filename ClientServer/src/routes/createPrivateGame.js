@@ -17,8 +17,12 @@ export async function createPrivateGame(dbClient,req, res) {
     try {
         const { id, collectionCode } = await insert(dbClient,"Game");
         //console.log("create game", req.body);
-        await update(dbClient,"Game",id,collectionCode,{"gameSettings": req.body.gameSettings});
-        await update(dbClient,"Game",id,collectionCode,{"max": req.body.gameSettings.max});
+        await update(dbClient,"Game",id,collectionCode,{});
+        await update(dbClient,"Game",id,collectionCode,{
+            "gameSettings": req.body.gameSettings, 
+            "max": req.body.gameSettings.max,
+            "status": "Idle"
+        });
         res.status(200).json({
             id: id,
             coll: collectionCode,

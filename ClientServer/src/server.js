@@ -41,12 +41,14 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
         app.get('/pv/:gameID(\\w{4})/', (req,res) => joinPage(dbClient,req,res)) //4 character gameID encoded into url
         //err
         app.get('/err', errorPage);
+
         //API calls
         //join game with gameID [JSON]
-        app.get('/joinPrivateGame', (req,res) => joinWithCode(dbClient,req,res));
+        app.post('/joinPrivateGame', (req,res) => joinWithCode(dbClient,req,res));
+
         app.get('/reserveSpot', (req,res) => reserveSpot(dbClient,req,res));
         //join game with gameID [JSON]
-        app.get('/createPrivateGame', (req,res) => createPrivateGame(dbClient,req,res));
+        app.post('/createPrivateGame', (req,res) => createPrivateGame(dbClient,req,res));
         //get list of gameServer urls
         app.get('/getServers',(req,res) => getServers(dbClient,req,res));
         //update player to be available for match making
