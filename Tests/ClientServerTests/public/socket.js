@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { SocketTimeOutError } from "../../src/errors/errors";
+import { SocketTimeOutError } from "../../../ClientServer/src/errors/errors";
 export const Socket = (url,events) => { return new Promise((resolve,reject) => {
     //console.log(url);
     const timeOutObj = setTimeout(() => {

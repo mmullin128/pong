@@ -4,14 +4,14 @@ import { fileURLToPath } from 'url';
 import axios from 'axios';
 import { Socket } from '../public/socket.js';
 
-import { startServer, closeServer } from "../../src/server.js";
+import { startServer, closeServer } from "../../../ClientServer/src/server.js";
 
 describe("server functions", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
         //dotenv only configures env variables from .env on a locally run environment containing a .env file
         //instances run from devolopment and deployment servers must pass in env variables
-        dotenv.config({ path: path.join(__dirname, '../../.env')});
+        dotenv.config({ path: path.join(__dirname, '../.env')});
         
     });
     test("sever startup and shutdown", async () => {
@@ -20,7 +20,7 @@ describe("server functions", () => {
         //console.log(": ", DB_URI.split(":")[0],"..."); //if working should be 'mongodb+srv'
         
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        process.chdir(path.join(__dirname, '../../src/'));
+        process.chdir(path.join(__dirname, '../../../ClientServer/src/'));
         const url = `http://localhost:${PORT}/`;
         const socketURL = `ws://localhost:${PORT}`;
         const badUrl = `ws://localhost:${PORT}E`;

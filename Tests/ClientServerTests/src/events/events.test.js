@@ -2,12 +2,12 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
-import { startServer, closeServer } from '../../../src/server';
+import { startServer, closeServer } from '../../../../ClientServer/src/server';
 
 import { createRequest } from '../../public/request'; //test request function using axios
-import { reserveSpot } from '../../../public/reserveSpot';
-import { createPrivateGame } from '../../../public/createPrivateGame';
-import { joinWithCode } from '../../../public/joinWithCode';
+import { reserveSpot } from '../../../../ClientServer/public/reserveSpot';
+import { createPrivateGame } from '../../../../ClientServer/public/createPrivateGame';
+import { joinWithCode } from '../../../../ClientServer/public/joinWithCode';
 
 import { Socket } from '../../public/socket';
 import { addPlayerData,
@@ -17,8 +17,8 @@ import { addPlayerData,
     chooseTeam,
     readyUp,
     setUsername
- } from '../../../public/socketEvents';
-import { generateID } from '../../../utils/idGenerators';
+ } from '../../../../ClientServer/public/socketEvents';
+import { generateID } from '../../../../ClientServer/utils/idGenerators';
 
 
 
@@ -28,7 +28,7 @@ describe("server functions", () => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
         //dotenv only configures env variables from .env on a locally run environment containing a .env file
         //instances run from devolopment and deployment servers must pass in env variables
-        dotenv.config({ path: path.join(__dirname, '../../../.env')});
+        dotenv.config({ path: path.join(__dirname, '../../.env')});
         
     });
     test("events", async () => {
@@ -90,7 +90,7 @@ describe("server functions", () => {
         //console.log(": ", DB_URI.split(":")[0],"..."); //if working should be 'mongodb+srv'
         //start server
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        process.chdir(path.join(__dirname, '../../../src'));
+        process.chdir(path.join(__dirname, '../../../../ClientServer/src'));
         const server = await startServer(PORT, DB_URI);
         const baseURL = `http://localhost:${PORT}`;
         const socketURL = `ws://localhost:${PORT}`;

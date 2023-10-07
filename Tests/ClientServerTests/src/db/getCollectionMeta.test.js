@@ -2,13 +2,13 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import jsonFromFile from '../../../utils/jsonFromFile.js';
-import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js';
-import { getMeta } from '../../../src/db/metaActions.js';
+import jsonFromFile from '../../../../ClientServer/utils/jsonFromFile.js';
+import { mongoClient, connect, disconnect } from '../../../../ClientServer/src/db/mongoClient.js';
+import { getMeta } from '../../../../ClientServer/src/db/metaActions.js';
 describe("Get Collection Meta", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        dotenv.config({ path: path.join(__dirname, '../../../.env')});
+        dotenv.config({ path: path.join(__dirname, '../../.env')});
         
     });
     test("getCollectionMeta", async () => {
@@ -17,7 +17,7 @@ describe("Get Collection Meta", () => {
         await connect(client);
         try {        
             const __dirname = path.dirname(fileURLToPath(import.meta.url));
-            const structure = await jsonFromFile(path.join(__dirname, '../../../src/db/db_utils/structure.json'));
+            const structure = await jsonFromFile(path.join(__dirname, '../../../../ClientServer/src/db/db_utils/structure.json'));
             const playersCollections = structure["Meta"]["playersCollections"];
             const gamesCollections = structure["Meta"]["gamesCollections"];
             const gameServers = structure["Meta"]["gameServers"];

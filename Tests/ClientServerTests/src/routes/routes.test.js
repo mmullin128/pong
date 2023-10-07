@@ -2,15 +2,15 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
-import { startServer, closeServer } from '../../../src/server';
+import { startServer, closeServer } from '../../../../ClientServer/src/server';
 
 import { createRequest } from '../../public/request'; //test request function using axios
 
-import { createPrivateGame } from '../../../public/createPrivateGame';
-import { joinWithCode } from '../../../public/joinWithCode';
-import { reserveSpot } from '../../../public/reserveSpot';
-import { getServers } from '../../../public/getServers';
-import { findMatch } from '../../../public/findMatch';
+import { createPrivateGame } from '../../../../ClientServer/public/createPrivateGame';
+import { joinWithCode } from '../../../../ClientServer/public/joinWithCode';
+import { reserveSpot } from '../../../../ClientServer/public/reserveSpot';
+import { getServers } from '../../../../ClientServer/public/getServers';
+import { findMatch } from '../../../../ClientServer/public/findMatch';
 
 import { WebSocket } from 'ws';
 
@@ -19,7 +19,7 @@ describe("server functions", () => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
         //dotenv only configures env variables from .env on a locally run environment containing a .env file
         //instances run from devolopment and deployment servers must pass in env variables
-        dotenv.config({ path: path.join(__dirname, '../../../.env')});
+        dotenv.config({ path: path.join(__dirname, '../../.env')});
         
     });
     test("routes", async () => {
@@ -29,7 +29,7 @@ describe("server functions", () => {
         //console.log(": ", DB_URI.split(":")[0],"..."); //if working should be 'mongodb+srv'
         //start server
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        process.chdir(path.join(__dirname, '../../../src'));
+        process.chdir(path.join(__dirname, '../../../../ClientServer/src'));
         const server = await startServer(PORT, DB_URI);
         const baseURL = `http://localhost:${PORT}`
         try {

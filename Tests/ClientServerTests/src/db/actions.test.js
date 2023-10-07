@@ -2,20 +2,20 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { mongoClient, connect, disconnect } from '../../../src/db/mongoClient.js';
-import { insert } from '../../../src/db/insert.js';
-import { update } from '../../../src/db/update.js';
-import { get } from '../../../src/db/get.js';
-import { remove } from '../../../src/db/remove.js';
-import { addPlayer } from '../../../src/db/addPlayer.js';
-import { getMeta } from '../../../src/db/metaActions.js';
-import { checkUsername } from '../../../src/db/checkUsername.js';
+import { mongoClient, connect, disconnect } from '../../../../ClientServer/src/db/mongoClient.js';
+import { insert } from '../../../../ClientServer/src/db/insert.js';
+import { update } from '../../../../ClientServer/src/db/update.js';
+import { get } from '../../../../ClientServer/src/db/get.js';
+import { remove } from '../../../../ClientServer/src/db/remove.js';
+import { addPlayer } from '../../../../ClientServer/src/db/addPlayer.js';
+import { getMeta } from '../../../../ClientServer/src/db/metaActions.js';
+import { checkUsername } from '../../../../ClientServer/src/db/checkUsername.js';
 
 
 describe("Database Actions", () => {
     beforeAll(() => {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        dotenv.config({ path: path.join(__dirname, '../../../.env')});
+        dotenv.config({ path: path.join(__dirname, '../../.env')});
         
     });
     test("actions", async () => {
