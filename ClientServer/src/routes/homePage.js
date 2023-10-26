@@ -3,7 +3,7 @@ import { errorPage } from "./errorPage.js";
 //if error pass to error route
 export function homePage(req, res) {
     try {
-        res.render('index', {mainMenuDisplay: "showing", usernameDisplay: ""}, (err,html) => {
+        res.render('index', (err,html) => {
             if (err) throw err;
             res.status(200).send(html);
         });

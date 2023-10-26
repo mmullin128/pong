@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import http from 'http';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import cors from 'cors';
 
 import { homePage } from './routes/homePage.js';
@@ -23,8 +23,9 @@ import { setUsername } from './events/setUsername.js';
 
 import { connect as connectDB, disconnect as disconnectDB, mongoClient } from './db/mongoClient.js';
 import { createPrivateGame } from './routes/createPrivateGame.js';
+import { getMeta } from './db/metaActions.js';
 
-export const startServer = (port,databaseURI) => new Promise((resolve,reject) => {
+export const startServer = (port,databaseURI,connectToGameServers=false) => new Promise( async (resolve,reject) => {
     try {
         const dbClient = mongoClient(databaseURI);
         const app = express();
@@ -57,6 +58,13 @@ export const startServer = (port,databaseURI) => new Promise((resolve,reject) =>
         const server = http.createServer(app);
         server.status = 'idle';
         server.dbClient = dbClient;
+        //create socket clients to create game on gameServers
+        const gameServers = await getGameServerUrls(dbClient);
+        let serverClients = {};
+        for (let server of gameServers) {
+            serverClients[server.name] = connectToGameServer(server.url);
+        }
+        // add websocket functionality to exposed http port
         const socketServer = new WebSocketServer({ server: server});
         socketServer.on("connection", socket => {
             socket.on("message", async data => {
@@ -140,3 +148,37 @@ export const closeServer = (server) => new Promise((resolve,reject) => {
         reject(err);
     }
 })
+
+
+export async function getGameServerUrls(dbClient) {
+    let i = 1
+    let servers = [];
+    while (true) {
+        try {
+            const server = await getMeta(dbClient,"Server",`S${i}`);
+            servers.push(server);
+            console.log(server);
+        } catch (err) {
+            if (err.name == "NoSuchCollectionError") {
+                break;
+            } else {
+                throw err; 
+            }
+        }
+        i += 1;
+    }
+    return servers;
+}
+
+
+export async function connectToGameServer(url) {
+    try {
+        const socket = new WebSocket(url);
+        return socket;
+    } catch (err) {
+        console.log("failed to connect to game server:", url);
+        setTimeout(() => {
+            connectToGameServer(url);
+        }, 5000);
+    }
+}

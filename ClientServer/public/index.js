@@ -42,6 +42,7 @@ export async function connectSocket(doc) {
                 }
                 for (let player of body.players) {
                     let playerElement = doc.getElementById(player.id);
+                    //if no player element add one to appropriate team
                     if (playerElement == null) {
                         playerElement = doc.createElement("div");
                         playerElement.id = player.id;
@@ -50,18 +51,21 @@ export async function connectSocket(doc) {
                         teams[player.team].appendChild(playerElement);
                     } else {
                         if (playerElement.getAttribute("team") != player.team) {
-                            console.log(playerElement.getAttribute("team"), player.team);
+                            // if playerElements team is not equal to server's recorded team, remove from current team element and add to correct
+                            //console.log(playerElement.getAttribute("team"), player.team);    
                             teams[playerElement.getAttribute("team")].removeChild(playerElement);
                             playerElement.setAttribute("team",player.team);
                             teams[player.team].appendChild(playerElement);
                         }
                     }
                 }
-                const id = getCookie(doc,"id");
-                const gameID = getCookie(doc,"gameID");
-                setTimeout(() => {
-                    checkPrivateGame(socket,id,gameID);
-                }, 50);
+                if (body.status != "InGame") {
+                    const id = getCookie(doc,"id");
+                    const gameID = getCookie(doc,"gameID");
+                    setTimeout(() => {
+                        checkPrivateGame(socket,id,gameID);
+                    }, 50);
+                }
             }
         },
         {

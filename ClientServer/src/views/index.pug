@@ -4,14 +4,14 @@ html
         title= "Paddle Ball"
         link(rel="stylesheet", href="styles.css")
     body 
-        div(class=`menu ${mainMenuDisplay}`, id="main-menu")
+        div.menu#main-menu
             h1#title Paddle Ball 
-            button.menu-btn#play-btn Play Now 
-            button.menu-btn#private-game-btn Private Game 
+            button.menu-btn#play-btn(send="username-alert") Play Now 
+            button.menu-btn#private-game-btn(send="private-game-menu") Private Game 
         div.menu#private-game-menu
             img.back-arrow#private-game-back-arrow(src="img/backarrow.svg", alt="back")
-            button.menu-btn#create-private-game-btn Create New 
-            button.menu-btn#join-private-game-btn Join Game
+            button.menu-btn#create-private-game-btn(send="create-game-menu") Create New 
+            button.menu-btn#join-private-game-btn(send="join-game-alert") Join Game
         div.menu#create-game-menu 
             img.back-arrow#create-game-back-arrow(src="img/backarrow.svg", alt="back")            
             h2 Choose Game Options 
@@ -42,7 +42,7 @@ html
             br
             input(class="form-input", type="text", id="game-id-input", name="game-id-input", minlength="4", maxlength="4")
             button.go-btn#enter-room-id-btn Go
-        div#username-alert(class=`alert ${usernameDisplay}`)
+        div.menu.alert#username-alert
             //this will be alert class             
             label(class="form-label", for="username-input") Enter Username
             br

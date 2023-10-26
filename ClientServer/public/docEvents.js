@@ -3,6 +3,7 @@ import { addPlayerData, checkPrivateGame, checkUsername, chooseTeam, readyUp, se
 import { createPrivateGame } from "./createPrivateGame.js";
 import { request } from "./request.js";
 import { joinWithCode } from "./joinWithCode.js";
+import { findMatch } from "./findMatch.js";
 
 export function render(doc,id) {
     //derender currently showing (except id element)
@@ -162,14 +163,14 @@ export function setButtonEvents(doc,socket) {
         const coll = getCookie(doc,"coll");
         setCookie(doc,"username",username);
         checkUsername(socket,id,coll,usernameInput.value);
-    })
+    });
     usernameBtn.addEventListener("click", (event) => {
         const id = getCookie(doc,"id");
         const coll = getCookie(doc,"coll");
         const username = getCookie(doc,"username");
         setUsername(socket,id,coll,username);
         render(doc,"choose-loadout-menu");
-    })
+    });
     chooseLoadoutBtn.addEventListener("click", (event) => {
         const gameMode = getCookie(doc,"gameMode");
         const id = getCookie(doc,"id");
@@ -182,6 +183,7 @@ export function setButtonEvents(doc,socket) {
         addPlayerData(socket,id,coll,playerData);
         if (gameMode == "public") {
             render(doc,"loading-alert");
+            findMatch(id,coll,request);
         }
         if (gameMode == "private") {
             const gameID = getCookie(doc,"gameID");
@@ -220,5 +222,5 @@ export function setButtonEvents(doc,socket) {
         const id = getCookie(doc,"id");
         const coll = getCookie(doc,"coll");
         readyUp(socket,id,coll,1);
-    })
+    });
 }
