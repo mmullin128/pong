@@ -5,6 +5,24 @@ export class Vector2 {
         this.x = x;
         this.y = y;
     }
+    static interp(v1,v2,c) {
+        return Vector2.add(Vector2.scale(v1,(1-c)),Vector2.scale(v2,c));
+    }
+    static dot(v1, v2) {
+        return v1.x*v2.x + v1.y*v2.y;
+    }
+    static negate(v) {return new Vector2(-v.x,-v.y); }
+    static component(v1, v2) {
+        const mod = Vector2.mod(v2);
+        if (mod == 0) return {x: 0, y: 0};
+        return Vector2.dot(v1,v2) / Vector2.mod(v2);
+    }
+    static project(v1, v2) {
+        return Vector2.scale(v2,Vector2.component(v1,v2));
+    }
+    static normalize(v) {
+        return Vector2.scale(v,1/Vector2.mod(v));
+    }
     static add(v1,v2) {
         return new Vector2(v1.x+v2.x, v1.y+v2.y);
     }
@@ -17,6 +35,7 @@ export class Vector2 {
     static distance(v1,v2) {
         return Math.hypot(v1.x-v2.x,v1.y-v2.y);
     }
+    static normal
     static scale(v,s) {
         return new Vector2(v.x*s,v.y*s);
     }
